@@ -11,11 +11,7 @@
 
 </head>
 <h1> 
-<<<<<<< HEAD:ProfessionalWebpage/WebsiteLogin.html
 	<img id="shannon-logo" src="Images\ShannonMedicalCenter.png" width="380" height="285" />
-=======
-	<img id="shannon-logo" src="Understood-ShannonProject\ProfessionalWebpage\Images\ShannonMedicalCenter.png" width="380" height="285" />
->>>>>>> 276f1d6691f7f5829d7d9ec6fd78855d46dd5d88:ProfessionalWebpage/HTML/WebsiteLogin.html
 </h1>
 
 <fieldset class="username">
@@ -29,9 +25,14 @@
 </fieldset>
 
 <fieldset class="login">
-	<button id="login" type="button">Login</button>
+	<button id="login" type="button" onclick="auth()">Login</button>
 </fieldset>
 
+<script>
+	function auth() {
+		window.location.assign("index.html");
+	}
+</script>
 <!---
 This wont be used now, just for reference to linking html to another html 
 <ul>
