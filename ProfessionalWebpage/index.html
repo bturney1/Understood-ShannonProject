@@ -1,24 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Simple Website</title>
-</head>
-<body>
-    <header>
-        <h1>Welcome to My Simple Website</h1>
-    </header>
-    <main>
-        <p>This is a basic website front page with some text.</p>
-        <button id="changeTextButton">Change Text</button>
-    </main>
-	
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<html lang="en-US"><head>
+<meta charset="UTF-8" />
+<title>Shannon Professional Login Page</title>
 
-	<script src="script.js"></script>
-</body>
+<!-- 
+	Import a CSS stylesheet to style the page.
+	href is the css file rel is stylesheet
+ -->
+<link href="CSS\WebsiteStyle.css" rel="stylesheet" />
+
+</head>
+<h1> 
+	<img id="shannon-logo" src="Images\ShannonMedicalCenter.png" width="380" height="285" />
+</h1>
+
+<fieldset class="username">
+	<label>Username:</label>
+	<input id="username" type="text">
+</fieldset>
+
+<fieldset class="password">
+	<label>Password:</label>
+	<input id="password" type="text">
+</fieldset>
+
+<fieldset class="login">
+	<button id="login" type="button" onclick="auth()">Login</button>
+</fieldset>
+
+<script>
+	function auth() {
+		window.location.assign("index.html");
+	}
+</script>
+<!---
+This wont be used now, just for reference to linking html to another html 
+<ul>
+	<a href="WebsiteDashboard.html">Dashboard</a>
+</ul>
+
+Script below should be the .js file
+<script src=""></script>
+-->
 </html>
