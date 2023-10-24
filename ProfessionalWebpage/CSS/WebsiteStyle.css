@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+body {
+	background-color: rgb(255, 250, 245);
+	font-family: Georgia, serif;
+}
+
+/*
+	Start of login website styling
+*/
+h1 {
+	display: flex;
+	justify-content: center;
+}
+
+fieldset {
+	display: flex;
+	justify-content: space-between;
+	margin: auto;
+	width: 300px;
+	height: 25px;
+	border: none;
+}
+
+input {
+	width: 200px;
+}
+
+.login {
+	display: flex;
+	justify-content: center;
+}
+/*
+	End of login website styling
+*/
+
