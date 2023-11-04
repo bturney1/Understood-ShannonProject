@@ -1,45 +1,43 @@
 <!DOCTYPE html>
-<html lang="en-US"><head>
-<meta charset="UTF-8" />
-<title>Shannon Professional Login Page</title>
-
-<!-- 
-	Import a CSS stylesheet to style the page.
-	href is the css file rel is stylesheet
- -->
-<link href="CSS\WebsiteStyle.css" rel="stylesheet" />
-
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8" />
+	<title>Shannon Professional Login Page</title>
+	<link href="CSS\LoginStyle.css" rel="stylesheet" />
 </head>
-<h1> 
-	<img id="shannon-logo" src="Images\ShannonMedicalCenter.png" width="380" height="285" />
-</h1>
+<body>
+	<h1> 
+		<img id="shannon-logo" src="Images\ShannonMedicalCenter.png" width="380" height="285" />
+	</h1>
 
-<fieldset class="username">
-	<label>Username:</label>
-	<input id="username" type="text">
-</fieldset>
+	<fieldset class="loginInfo">
+		<div class="user">
+			<label>Username:</label>
+			<input id="username" type="text">
+		</div>
+		<div class="pass">
+			<label>Password:</label>
+			<input id="password" type="password">
+		</div>
+	</fieldset>
 
-<fieldset class="password">
-	<label>Password:</label>
-	<input id="password" type="text">
-</fieldset>
+	<fieldset class="login">
+		<button id="login" type="button" onclick="auth()">Login</button>
+	</fieldset>
 
-<fieldset class="login">
-	<button id="login" type="button" onclick="auth()">Login</button>
-</fieldset>
+	<script>
+		function auth() {
+			window.location.assign("WebsiteDashboard.html");
+		}
+	</script>
+	<!---
+	This wont be used now, just for reference to linking html to another html 
+	<ul>
+		<a href="WebsiteDashboard.html">Dashboard</a>
+	</ul>
 
-<script>
-	function auth() {
-		window.location.assign("index2.html");
-	}
-</script>
-<!---
-This wont be used now, just for reference to linking html to another html 
-<ul>
-	<a href="WebsiteDashboard.html">Dashboard</a>
-</ul>
-
-Script below should be the .js file
-<script src=""></script>
--->
+	Script below should be the .js file
+	<script src=""></script>
+	-->
+</body>
 </html>

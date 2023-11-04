@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+body {
+	background-color: rgb(255, 250, 245);
+	font-family: Georgia, serif;
+}
+
+h1 {
+	display: flex;
+	justify-content: center;
+}
+
+label {
+	display: inline-block;
+	width: 100px;
+	text-align: left;
+}
+
+.loginInfo {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100px;
+	border: none;
+}
+
+.loginInfo {
+	text-align: center;
+}
+
+.login {
+	text-align: center;
+	border: none;
+}
+
+.user, .pass {
+	margin-bottom: 10px;
+}
+
+#login {
+	padding: 10px 20px;
+}
+
