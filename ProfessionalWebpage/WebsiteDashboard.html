@@ -8,7 +8,7 @@
 <body>
 	<div>
 		<fieldset class="topLeft">
-			<img id="shannon-logo" src="Images\ShannonMedicalCenter.png" width="126" height="95" />
+			<img id="shannon-logo" src="Images\ShannonMedicalCenter.png" width="126" height="95"/>
 			<button id="patientSearch" type="button">Patient search</button>
 		</fieldset>
 		<h1>Dashboard</h1>
@@ -19,12 +19,19 @@
 			<label>Log out</label>
 		</fieldset>
 	</div>
+	
 	<h3>Notifications</h3>
-	<fieldset class="alerts">
-		<!-- 
-			This empty div will hold divs that 
-			contain the patient alerts.
-		-->
+	
+	<fieldset class="alertsField">
+		<div id="alertsDiv">
+			<!-- 
+				This empty div will hold divs that 
+				contain the patient alerts.
+			-->
+		</div>
 	</fieldset>
-</body>
-</html>
+	
+	<!--<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>-->
+	<script src="Scripts\DashboardScript.js"></script>
+</body></html>

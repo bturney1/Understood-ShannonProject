@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var provider = new firebase.auth.GoogleAuthProvider();
 
-firebase.auth().signInWithPopup(provider)
+/*firebase.auth().signInWithPopup(provider)
     .then((result) => {
         // Successful sign-in
         var user = result.user;
@@ -28,7 +28,7 @@ firebase.auth().signInWithPopup(provider)
         // Error handling
         console.error("Google sign-in failed:", error);
     });
-
+*/
 	const changeTextButton = document.getElementById('changeTextButton');
     const paragraph = document.querySelector('p');
 
