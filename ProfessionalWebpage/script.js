@@ -13,22 +13,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 document.addEventListener('DOMContentLoaded', function() {
-// TODO: Replace the following with your app's Firebase project configuration
-// See: https://support.google.com/firebase/answer/701559
-
-	var provider = new firebase.auth.GoogleAuthProvider();
-
-firebase.auth().signInWithPopup(provider)
-    .then((result) => {
-        // Successful sign-in
-        var user = result.user;
-        console.log("Google user signed in:", user.displayName);
-    })
-    .catch((error) => {
-        // Error handling
-        console.error("Google sign-in failed:", error);
-    });
-
+	
 	const changeTextButton = document.getElementById('changeTextButton');
     const paragraph = document.querySelector('p');
 
