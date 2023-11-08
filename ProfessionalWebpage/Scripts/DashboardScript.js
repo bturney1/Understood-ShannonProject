@@ -50,9 +50,9 @@ document.addEventListener("DOMContentLoaded", function() {
             const childDiv = document.createElement("div");
             childDiv.textContent = i;
             if(i % 2 == 0) {
-               childDiv.classList.add("alert");
+               childDiv.setAttribute("id", "alert");
             } else {
-               childDiv.classList.add("notification");
+               childDiv.setAttribute("id", "notification");
             }
             alertsElement.appendChild(childDiv); // Append the child div to the parent div
          }
