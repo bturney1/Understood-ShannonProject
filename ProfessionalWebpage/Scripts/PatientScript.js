@@ -1,5 +1,3 @@
-//NAME FUNCTIONS
-
 // Initialize Firebase
 var firebaseConfig = {
     apiKey: "AIzaSyAOFuW59Zaj7W9Zbvc2JHREFYaMNolSnww",
@@ -19,6 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
             document.body.style.display = 'block';
+            buttons();
+            patientFunction();
         } else {
             window.location.assign("index.html");
         }
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
    /*
       Functionality for dashboard, search, and logout buttons
    */
-   (function() {
+   const buttons = function() {
       /*
          Dashboard button
       */
@@ -54,12 +54,12 @@ document.addEventListener("DOMContentLoaded", function () {
           });
           window.location.assign("index.html");
       });
-   }());
+   };
    
-   (function() {
+   const patientFunction = function() {
       // Update the header to the patient's name or ID
       const patientID = window.location.search.substring(1, window.location.search.length);
       document.querySelector("#patientName").textContent = patientID;
       
-   }());
+   };
 });

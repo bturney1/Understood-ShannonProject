@@ -1,5 +1,3 @@
-//NAME FUNCTIONS
-
 // Initialize Firebase
 var firebaseConfig = {
     apiKey: "AIzaSyAOFuW59Zaj7W9Zbvc2JHREFYaMNolSnww",
@@ -19,6 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
             document.body.style.display = 'block';
+            buttons();
+            searchFunction();
         } else {
             window.location.assign("index.html");
         }
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
    /*
       Functionality for dashboard and logout buttons
    */
-   (function() {
+   const buttons = function() {
       /*
          Dashboard button
       */
@@ -56,9 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
           });
           window.location.assign("index.html");
       });
-   }());
+   };
    
-   (function() {
+   const searchFunction = function() {
       /*
          Search that will remove all divs
          and then put up new divs that put 
@@ -103,5 +103,5 @@ document.addEventListener("DOMContentLoaded", function () {
       
       
       
-   }());
+   };
 });
