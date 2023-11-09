@@ -57,35 +57,47 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     
     const searchFunction = function() {
+        // Sample code to try and get search working
+        const namesList = ["John", "Ethan", "Ben", "Victor", "Aledis", "Almira", "Skylar", "Skyler", "Caige", "Jackie"]; 
+        
+        const getRelatedNames = function(inputName) {
+            inputName = inputName.toLowerCase();
+            const relatedNames = namesList.filter(name => name.toLowerCase().includes(inputName));
+            return relatedNames;
+        }
         /*
             Search that will remove all divs
             and then put up new divs that put 
             patients that relate to the search
         */
-        const updateSearch = function(name) {
+        const updateSearch = function(inputName) {
             const patientsElement = document.querySelector("#patientsDiv");
-            patientSize = 10;
-            name = name.trim();
-            if(name == "") {
-            console.log("Present whole patient list");
+            inputName = inputName.trim();
+            if(inputName == "") {
+                console.log("Present whole patient list");
             } else {
-            console.log(name + " is being looked for");
+                console.log(inputName + " is being looked for");
             }
             
             // Clean out the patients list
             [...patientsElement.childNodes].forEach(function (childNode) {
-            childNode.remove();
+                childNode.remove();
             });
             
+            // Get an array of related names
+            let relatedNames = getRelatedNames(inputName);
+            // Sort array of names in alphabetical
+            relatedNames.sort();
+            
             // Fill up the patients list
-            for(let i = 0; i < patientSize; i++) {
-            const childDiv = document.createElement("div");
-            const childA = document.createElement("a");
-            childDiv.setAttribute("id", "patient"); // Add the id of patient to the div
-            childA.setAttribute("href", "WebsitePatient.html?" + i); // Add the click functionality to the patient
-            childA.textContent = i; // Present patient name
-            childDiv.appendChild(childA); // Append the child a element to the parent div
-            patientsElement.appendChild(childDiv); // Append the child div to the parent div
+            for(let i = 0; i < relatedNames.length; i++) {
+                const childDiv = document.createElement("div");
+                const childA = document.createElement("a");
+                childDiv.setAttribute("id", "patient"); // Add the id of patient to the div
+                childA.setAttribute("href", "WebsitePatient.html?" + i + "." + relatedNames[i]); // Add the click functionality to the patient
+                childA.textContent = i + "." + relatedNames[i]; // Present patient name
+                childDiv.appendChild(childA); // Append the child a element to the parent div
+                patientsElement.appendChild(childDiv); // Append the child div to the parent div
             }
         };
         
@@ -93,10 +105,16 @@ document.addEventListener("DOMContentLoaded", function () {
         updateSearch("");
         
         /*
-            Search bar button
+            Search bar button and enter press
         */
         document.querySelector("#searchButton").addEventListener("click", function() {
             updateSearch(document.querySelector("#search").value);
+        });
+        
+        document.querySelector("#search").addEventListener("keypress", function (event) {
+            if(event.keyCode == 13) {
+                updateSearch(document.querySelector("#search").value);
+            }
         });
     };
 });
