@@ -11,9 +11,9 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-//Patient page
+// Patient page
 document.addEventListener("DOMContentLoaded", function () {
-    //Handle Account Status
+    // Handle Account Status
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
             document.body.style.display = 'block';
@@ -23,43 +23,43 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.assign("index.html");
         }
     });
-   /*
-      Functionality for dashboard, search, and logout buttons
-   */
-   const buttons = function() {
-      /*
-         Dashboard button
-      */
-      document.querySelector("#dashboard").addEventListener("click", function() {
-         window.location.assign("WebsiteDashboard.html");
-      });
-      
-      /*
-         Search button
-      */
-      document.querySelector("#patientSearch").addEventListener("click", function() {
-         window.location.assign("WebsiteSearch.html");
-      });
-      
-      /*
-         Logout button
-      */
-      document.querySelector("#logout").addEventListener("click", function() {
-          firebase.auth().signOut().then(function () {
-              // Sign-out successful.
-              console.log('User has been logged out.');
-          }).catch(function (error) {
-              // An error happened.
-              console.error('Error occurred during logout: ' + error.message);
-          });
-          window.location.assign("index.html");
-      });
-   };
-   
-   const patientFunction = function() {
-      // Update the header to the patient's name or ID
-      const patientID = window.location.search.substring(1, window.location.search.length);
-      document.querySelector("#patientName").textContent = patientID;
-      
-   };
+    /*
+        Functionality for dashboard, search, and logout buttons
+    */
+    const buttons = function() {
+        /*
+            Dashboard button
+        */
+        document.querySelector("#dashboard").addEventListener("click", function() {
+            window.location.assign("WebsiteDashboard.html");
+        });
+        
+        /*
+            Search button
+        */
+        document.querySelector("#patientSearch").addEventListener("click", function() {
+            window.location.assign("WebsiteSearch.html");
+        });
+        
+        /*
+            Logout button
+        */
+        document.querySelector("#logout").addEventListener("click", function() {
+            firebase.auth().signOut().then(function () {
+                // Sign-out successful.
+                console.log('User has been logged out.');
+            }).catch(function (error) {
+                // An error happened.
+                console.error('Error occurred during logout: ' + error.message);
+            });
+            window.location.assign("index.html");
+        });
+    };
+    
+    const patientFunction = function() {
+        // Update the header to the patient's name or ID
+        const patientID = window.location.search.substring(1, window.location.search.length);
+        document.querySelector("#patientName").textContent = patientID;
+        
+    };
 });
