@@ -1,3 +1,3 @@
-# Understood-ShannonProject
-Created by Benjamin Turney, Ethan Clark, Victor Savala, and Luis Ocada
-Test push to commit for iteration 2 - Ethan Clark
+# Understood-ShannonProject  
+Created by Benjamin Turney, Ethan Clark, Victor Savala, and Luis Ocada  
+Website: https://teamunderstoodshannon.web.app/
