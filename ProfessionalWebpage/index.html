@@ -6,7 +6,7 @@
 	<link href="CSS\LoginStyle.css" rel="stylesheet" />
 </head>
 <body>
-	<h1> 
+	<h1>
 		<img id="shannon-logo" src="Images\ShannonMedicalCenter.png" width="380" height="285" />
 	</h1>
 
@@ -19,25 +19,15 @@
 			<label>Password:</label>
 			<input id="password" type="password">
 		</div>
+		<div id="prompt"></div>
 	</fieldset>
 
 	<fieldset class="login">
-		<button id="login" type="button" onclick="auth()">Login</button>
+		<button id="login" type="button">Login</button>
 	</fieldset>
 
-	<script>
-		function auth() {
-			window.location.assign("WebsiteDashboard.html");
-		}
-	</script>
-	<!---
-	This wont be used now, just for reference to linking html to another html 
-	<ul>
-		<a href="WebsiteDashboard.html">Dashboard</a>
-	</ul>
-
-	Script below should be the .js file
-	<script src=""></script>
-	-->
-</body>
-</html>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+	<script src="Scripts\LoginScript.js"></script>
+</body></html>

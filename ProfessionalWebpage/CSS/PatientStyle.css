@@ -35,7 +35,8 @@ label, h3 {
 	border: none;
 }
 
-#patientSearch, #dashboard {
+#patientSearch, 
+#dashboard {
 	color: rgb(255, 255, 255);
 	background-color: rgb(0, 104, 93);
 	border-radius: 5px;
@@ -44,7 +45,8 @@ label, h3 {
 	margin-bottom: 2px;
 }
 
-#patientSearch:hover, #dashboard:hover {
+#patientSearch:hover, 
+#dashboard:hover {
 	background-color: rgb(169, 169, 169);
 }
 

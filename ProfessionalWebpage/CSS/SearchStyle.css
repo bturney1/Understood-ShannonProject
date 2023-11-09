@@ -38,10 +38,10 @@ h3 {
 	border: none;
 }
 
-.patientField {
+.patientsField {
 	border-color: rgb(0, 0, 0);
 	border-width: 2px;
-	border-radius: 20px;
+	border-radius: 10px;
 }
 
 #dashboard {
@@ -54,7 +54,7 @@ h3 {
 }
 
 #dashboard:hover {
-	background-color: rgb(169, 169, 169);
+	background-color: rgb(2, 48, 32);
 }
 
 #logout {
@@ -65,4 +65,20 @@ h3 {
 
 #logout:hover {
   background-color: rgb(200, 200, 200);
+}
+
+#patientsDiv {
+	display: flex;
+	flex-direction: column;
+}
+
+#patient {
+	justify-content: center;
+	width: 100%;
+	padding: 5px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 10px;
 }
