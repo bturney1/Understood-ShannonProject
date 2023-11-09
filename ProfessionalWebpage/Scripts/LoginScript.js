@@ -1,3 +1,16 @@
+// Initialize Firebase
+var firebaseConfig = {
+    apiKey: "AIzaSyAOFuW59Zaj7W9Zbvc2JHREFYaMNolSnww",
+    authDomain: "teamunderstoodshannon.firebaseapp.com",
+    projectId: "teamunderstoodshannon",
+    storageBucket: "teamunderstoodshannon.appspot.com",
+    messagingSenderId: "302604389305",
+    appId: "1:302604389305:web:fd017389332c2906b3c468",
+    measurementId: "G-RXCDK0QCK9"
+};
+
+firebase.initializeApp(firebaseConfig);
+
 //Login page
 document.addEventListener("DOMContentLoaded", function () {
    /*
@@ -33,16 +46,29 @@ document.addEventListener("DOMContentLoaded", function () {
          prompt the user to relogin.
       */
       const login = function() {
-         const inputUser = document.querySelector("#username").value;
-         const inputPass = document.querySelector("#password").value;
-         const hashedPass = hashPass(inputPass);
-         document.querySelector("#prompt").innerHTML = "";
+         const email = document.querySelector("#username").value;
+         const password = document.querySelector("#password").value;
+          document.querySelector("#prompt").innerHTML = "";
+
+          firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
+              // Handle Errors here.
+              var errorCode = error.code;
+              console.log(error.Message);
+              document.querySelector("#prompt").innerHTML = "The username/password was incorrect.";
+          });
+
+          //Handle Account Status
+          firebase.auth().onAuthStateChanged(user => {
+              if (user) {
+                  window.location = 'WebsiteDashboard.html'; //After successful login, user will be redirected to home.html
+              }
+          });
          
-         if(validate(inputUser, hashedPass)) {
+         /*if(validate(inputUser, hashedPass)) {
             window.location.assign("WebsiteDashboard.html");
          } else {
             document.querySelector("#prompt").innerHTML = "The username/password was incorrect.";
-         } 
+         }*/
       };
       
       /*

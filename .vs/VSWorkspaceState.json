@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\ProfessionalWebpage"
+    "\\ProfessionalWebpage",
+    "\\ProfessionalWebpage\\Scripts"
   ],
-  "SelectedNode": "\\ProfessionalWebpage\\index1.html",
+  "SelectedNode": "\\ProfessionalWebpage\\Scripts\\LoginScript.js",
   "PreviewInSolutionExplorer": false
 }

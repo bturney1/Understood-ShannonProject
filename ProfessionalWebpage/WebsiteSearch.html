@@ -6,6 +6,13 @@
 	<link href="CSS\SearchStyle.css" rel="stylesheet" />
 </head>
 <body>
+
+	<style>
+		body {
+			display: none;
+		}
+	</style>
+
 	<div>
 		<fieldset class="topLeft">
 			<img id="shannon-logo" src="Images\ShannonMedicalCenter.png" width="126" height="95" />
@@ -14,12 +21,12 @@
 		<h1>Patient search</h1>
 		<fieldset class="logoutField">
 			<button id="logout" type="button">
-				<img src="Images\Logout.png" height="64" width="64"/>
+				<img src="Images\Logout.png" height="64" width="64" />
 			</button>
 			<label>Log out</label>
 		</fieldset>
 	</div>
-	
+
 	<fieldset class="searchField">
 		<label>Search:</label>
 		<input id="search" type="text">
@@ -27,9 +34,9 @@
 			<image src="Images\Search.png" width="18" height="18">
 		</button>
 	</fieldset>
-	
+
 	<h3>Patients</h3>
-	
+
 	<fieldset class="patientsField">
 		<div id="patientsDiv">
 			<!--
@@ -37,8 +44,9 @@
 			-->
 		</div>
 	</fieldset>
-	
-	<!--<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>-->
+
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 	<script src="Scripts\SearchScript.js"></script>
 </body></html>

@@ -6,6 +6,13 @@
 	<link href="CSS\PatientStyle.css" rel="stylesheet" />
 </head>
 <body>
+
+	<style>
+		body {
+			display: none;
+		}
+	</style>
+
 	<div>
 		<fieldset class="topLeft">
 			<img id="shannon-logo" src="Images\ShannonMedicalCenter.png" width="126" height="95" />
@@ -15,12 +22,12 @@
 		<h1 id="patientName">Patient(Replace with patient name)</h1>
 		<fieldset class="logoutField">
 			<button id="logout" type="button">
-				<img src="Images\Logout.png" height="64" width="64"/>
+				<img src="Images\Logout.png" height="64" width="64" />
 			</button>
 			<label>Log out</label>
 		</fieldset>
 	</div>
-	
+
 	<fieldset id="paitentsVitals">
 		<div>
 			<!--
@@ -29,8 +36,9 @@
 			-->
 		</div>
 	</fieldset>
-	
-	<!--<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>-->
+
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 	<script src="Scripts\PatientScript.js"></script>
 </body></html>
