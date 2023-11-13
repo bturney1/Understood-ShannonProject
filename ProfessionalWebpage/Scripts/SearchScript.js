@@ -26,8 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
     
     /*
         We need to put in new divs for each patient.
-        Then need to have the search bar be able to search, 
-        as well as the button working for that.
     */
     
     /*

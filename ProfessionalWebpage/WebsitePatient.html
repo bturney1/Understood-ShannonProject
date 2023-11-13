@@ -35,6 +35,17 @@
 				the patients info
 			-->
 		</div>
+		<div>
+			<label for="alertList">Custom alert for: </label>
+			<select name="alertList">
+				<option value="heartRate">Heart rate</option>
+				<option value="oxygenLevel">Oxygen level</option>
+			</select>
+			<label for="alertLow">low: </label>
+			<input name="alertLow"></input>
+			<label for="alertHigh">high: </label>
+			<input name="alertHigh"></input>
+		</div>
 	</fieldset>
 
 	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
