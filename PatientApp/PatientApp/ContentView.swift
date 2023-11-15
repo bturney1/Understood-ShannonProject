@@ -4,82 +4,58 @@
 //
 //  Created by Benjamin Turney on 11/15/23.
 //
-
 import SwiftUI
-import CoreData
+import HealthKit
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-
-    var body: some View {
-        NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-            Text("Select an item")
+    
+    private var healthStore: HealthStore?
+    
+    init() {
+        healthStore = HealthStore()
+    }
+    
+    private func updateUIFromStatistics( statisticCollection: HKStatisticsCollection) {
+        let startDate = Calendar.current.date(byAdding: .day, value: -7, to: Date())!
+        let endDate = Date()
+        
+        statisticCollection.enumerateStatistics(from: startDate, to: endDate) { (statistics, stop) in
+            let count = statistics.sumQuantity()?.doubleValue(for: .count())
         }
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+    
+    var body: some View
+    {
+        VStack
+        {
+            Image(systemName: "heart")
+                .imageScale(.large)
+                .foregroundStyle(.tint)
+            Text("Hello, trvk!")
+            
+                .onAppear
+            {
+                if let healthStore = healthStore
+                {
+                    healthStore.requestAuthorization { success in
+                        if success {
+                            print("We got to success")
+                            healthStore.calculateSteps { statisticsCollection in
+                                if let statisticsCollection = statisticsCollection {
+                                    // update the ui
+                                    print("We got to statistics")
+                                    print(statisticsCollection)
+                                }
+                            }
+                        }
+                    }
+                }
             }
+            Text("Hello, trvk!")
         }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
+        .padding()
     }
 }
-
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
