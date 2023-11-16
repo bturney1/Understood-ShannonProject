@@ -1,5 +1,5 @@
 // Initialize Firebase
-var firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyAOFuW59Zaj7W9Zbvc2JHREFYaMNolSnww",
     authDomain: "teamunderstoodshannon.firebaseapp.com",
     projectId: "teamunderstoodshannon",
@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.body.style.display = 'block';
             buttons();
             patientFunction();
+            drawGraph();
         } else {
             window.location.assign("index.html");
         }
@@ -61,5 +62,23 @@ document.addEventListener("DOMContentLoaded", function () {
         const patientID = window.location.search.substring(1, window.location.search.length);
         document.querySelector("#patientName").textContent = patientID;
         
+    };
+
+    const drawGraph = function () {
+        const xValues = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
+        const yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
+
+        const myChart = new Chart("myChart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    //backgroundColor: "rgba(0,0,255,1.0)",
+                    borderColor: "rgba(0,0,255,0.1)",
+                    data: yValues
+                }]
+            },
+            options: {}
+        });
     };
 });
