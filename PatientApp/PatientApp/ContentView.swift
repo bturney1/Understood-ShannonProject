@@ -9,20 +9,9 @@ import HealthKit
 
 struct ContentView: View {
     
-    private var healthStore: HealthStore?
+    let healthStore = HKHealthStore()
     
-    init() {
-        healthStore = HealthStore()
-    }
-    
-    private func updateUIFromStatistics( statisticCollection: HKStatisticsCollection) {
-        let startDate = Calendar.current.date(byAdding: .day, value: -7, to: Date())!
-        let endDate = Date()
-        
-        statisticCollection.enumerateStatistics(from: startDate, to: endDate) { (statistics, stop) in
-            let count = statistics.sumQuantity()?.doubleValue(for: .count())
-        }
-    }
+    @State private var heartRate: Double?
     
     var body: some View
     {
@@ -32,33 +21,47 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             Text("Hello, trvk!")
-            
-                .onAppear
-            {
-                if let healthStore = healthStore
-                {
-                    healthStore.requestAuthorization { success in
-                        if success {
-                            print("We got to success")
-                            healthStore.calculateSteps { statisticsCollection in
-                                if let statisticsCollection = statisticsCollection {
-                                    // update the ui
-                                    print("We got to statistics")
-                                    print(statisticsCollection)
-                                }
-                            }
-                        }
+                .onAppear(perform: {
+                    requestHKAuth()
+                })
+                
+            Text("Heart Rate: \(heartRate.map { String(format: "%.0f", $0) } ?? "N/A") BPM")
+        }
+    }
+    
+    func requestHKAuth() {
+        if HKHealthStore.isHealthDataAvailable() {
+                let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
+                    
+                let typesToRead: Set<HKObjectType> = [heartRateType]
+                healthStore.requestAuthorization(toShare: nil, read: typesToRead) { (success, error) in
+                    if success {
+                        print("HealthKit authorization successful")
+                        // If authorization is successful, request the heart rate immediately
+                        self.requestHeartRate()
+                    } else {
+                        // Handle error or user denying access
+                        print("Error requesting health data authorization: \(String(describing: error?.localizedDescription))")
                     }
                 }
             }
-            Text("Hello, trvk!")
-        }
-        .padding()
+        requestHeartRate()
     }
-}
+    
+    func requestHeartRate() {
+            if HKHealthStore.isHealthDataAvailable() {
+                let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
+                let query = HKSampleQuery(sampleType: heartRateType, predicate: nil, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (query, results, error) in
+                    if let samples = results as? [HKQuantitySample] {
+                        if let latestHeartRateSample = samples.last {
+                            let heartRate = latestHeartRateSample.quantity.doubleValue(for: HKUnit.count().unitDivided(by: HKUnit.minute()))
+                            self.heartRate = heartRate
+                        }
+                    }
+                }
+
+                healthStore.execute(query)
+            }
+        }
 }
