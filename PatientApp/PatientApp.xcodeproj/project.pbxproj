@@ -13,6 +13,10 @@
 		6502F0DB2B056BBC001ACA77 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6502F0DA2B056BBC001ACA77 /* Preview Assets.xcassets */; };
 		6502F0DD2B056BBC001ACA77 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6502F0DC2B056BBC001ACA77 /* Persistence.swift */; };
 		6502F0E02B056BBC001ACA77 /* PatientApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6502F0DE2B056BBC001ACA77 /* PatientApp.xcdatamodeld */; };
+		6539E02D2B06B3FB00D01CC0 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6539E02C2B06B3FB00D01CC0 /* FirebaseAnalytics */; };
+		6539E02F2B06B3FB00D01CC0 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 6539E02E2B06B3FB00D01CC0 /* FirebaseAuth */; };
+		6539E0312B06B3FB00D01CC0 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 6539E0302B06B3FB00D01CC0 /* FirebaseFirestore */; };
+		6539E0332B06B5F900D01CC0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6539E0322B06B5F800D01CC0 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +27,7 @@
 		6502F0DA2B056BBC001ACA77 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6502F0DC2B056BBC001ACA77 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		6502F0DF2B056BBC001ACA77 /* PatientApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PatientApp.xcdatamodel; sourceTree = "<group>"; };
+		6539E0322B06B5F800D01CC0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		65AA183F2B05867F00D82FD9 /* PatientApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PatientApp.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -31,6 +36,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6539E02D2B06B3FB00D01CC0 /* FirebaseAnalytics in Frameworks */,
+				6539E02F2B06B3FB00D01CC0 /* FirebaseAuth in Frameworks */,
+				6539E0312B06B3FB00D01CC0 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +70,7 @@
 				6502F0D72B056BBC001ACA77 /* Assets.xcassets */,
 				6502F0DC2B056BBC001ACA77 /* Persistence.swift */,
 				6502F0DE2B056BBC001ACA77 /* PatientApp.xcdatamodeld */,
+				6539E0322B06B5F800D01CC0 /* GoogleService-Info.plist */,
 				6502F0D92B056BBC001ACA77 /* Preview Content */,
 			);
 			path = PatientApp;
@@ -91,6 +100,11 @@
 			dependencies = (
 			);
 			name = PatientApp;
+			packageProductDependencies = (
+				6539E02C2B06B3FB00D01CC0 /* FirebaseAnalytics */,
+				6539E02E2B06B3FB00D01CC0 /* FirebaseAuth */,
+				6539E0302B06B3FB00D01CC0 /* FirebaseFirestore */,
+			);
 			productName = PatientApp;
 			productReference = 6502F0D02B056BBA001ACA77 /* PatientApp.app */;
 			productType = "com.apple.product-type.application";
@@ -119,6 +133,9 @@
 				Base,
 			);
 			mainGroup = 6502F0C72B056BBA001ACA77;
+			packageReferences = (
+				6539E02B2B06B3FB00D01CC0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 6502F0D12B056BBA001ACA77 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -135,6 +152,7 @@
 			files = (
 				6502F0DB2B056BBC001ACA77 /* Preview Assets.xcassets in Resources */,
 				6502F0D82B056BBC001ACA77 /* Assets.xcassets in Resources */,
+				6539E0332B06B5F900D01CC0 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,6 +383,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6539E02B2B06B3FB00D01CC0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6539E02C2B06B3FB00D01CC0 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6539E02B2B06B3FB00D01CC0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		6539E02E2B06B3FB00D01CC0 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6539E02B2B06B3FB00D01CC0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		6539E0302B06B3FB00D01CC0 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6539E02B2B06B3FB00D01CC0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		6502F0DE2B056BBC001ACA77 /* PatientApp.xcdatamodeld */ = {
