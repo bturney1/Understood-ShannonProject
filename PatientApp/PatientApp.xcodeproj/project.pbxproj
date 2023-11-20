@@ -28,6 +28,7 @@
 		6502F0DC2B056BBC001ACA77 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		6502F0DF2B056BBC001ACA77 /* PatientApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PatientApp.xcdatamodel; sourceTree = "<group>"; };
 		6539E0322B06B5F800D01CC0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		653A205E2B0C1A8D008BC7B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		65AA183F2B05867F00D82FD9 /* PatientApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PatientApp.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -64,6 +65,7 @@
 		6502F0D22B056BBA001ACA77 /* PatientApp */ = {
 			isa = PBXGroup;
 			children = (
+				653A205E2B0C1A8D008BC7B8 /* Info.plist */,
 				65AA183F2B05867F00D82FD9 /* PatientApp.entitlements */,
 				6502F0D32B056BBA001ACA77 /* PatientAppApp.swift */,
 				6502F0D52B056BBA001ACA77 /* ContentView.swift */,
@@ -299,6 +301,7 @@
 				DEVELOPMENT_TEAM = 5RM7MZX4GY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PatientApp/Info.plist;
 				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "PatientApp wants to access your health data to send to health professionals.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "PatientApp wants to access your health data to send to health professionals.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "PatientApp wants to access your health data to send to health professionals.";
@@ -336,6 +339,7 @@
 				DEVELOPMENT_TEAM = 5RM7MZX4GY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PatientApp/Info.plist;
 				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "PatientApp wants to access your health data to send to health professionals.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "PatientApp wants to access your health data to send to health professionals.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "PatientApp wants to access your health data to send to health professionals.";
