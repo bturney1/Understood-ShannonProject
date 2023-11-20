@@ -64,21 +64,88 @@ document.addEventListener("DOMContentLoaded", function () {
         
     };
 
+    /*
+        Draw Graph
+    */
     const drawGraph = function () {
-        const xValues = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
-        const yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
+
+        //Get data from DB and then draw graph
+
+        var firestoreTimestamps = [
+            new Date("2023-11-20T12:00:00"),
+            new Date("2023-11-20T12:35:00"),
+            new Date("2023-11-20T12:40:00"),
+            new Date("2023-11-21T08:30:00"),
+            new Date("2023-11-22T18:45:00"),
+            // Add more timestamps as needed
+        ];
+
+        // Your dataset
+        var data = {
+            labels: firestoreTimestamps,
+            datasets: [
+                {
+                    label: 'Heart Rate',
+                    data: [80, 76, 90, 150], // Replace with your actual data
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }
+            ]
+        };
+
+        // Filter data for specific dates
+        var specificDates = ["2023-11-20"]; // Add the specific dates you want to display
+        var filteredLabels = [];
+        var filteredData = [];
+
+        data.labels.forEach((timestamp, index) => {
+            var timeString = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            if (specificDates.includes(timestamp.toISOString().split('T')[0])) {
+                filteredLabels.push(timeString);
+                filteredData.push(data.datasets[0].data[index]);
+            }
+        });
+
+        // Update data with filtered data
+        data.labels = filteredLabels;
+        data.datasets[0].data = filteredData;
+
+
+        var options = {
+            scales: {
+                x: {
+                    type: 'category',
+                    title: {
+                        display: true,
+                        text: 'Time'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Value'
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            var label = context.dataset.label || '';
+                            var value = context.parsed.y || 0;
+                            return `${label}: ${value} at ${context.label}`;
+                        }
+                    }
+                }
+            }
+        };
 
         const myChart = new Chart("myChart", {
             type: "line",
-            data: {
-                labels: xValues,
-                datasets: [{
-                    //backgroundColor: "rgba(0,0,255,1.0)",
-                    borderColor: "rgba(0,0,255,0.1)",
-                    data: yValues
-                }]
-            },
-            options: {}
+            data: data,
+            options: options
         });
+
     };
 });
