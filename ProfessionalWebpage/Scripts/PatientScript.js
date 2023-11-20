@@ -10,7 +10,6 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 // Patient page
 document.addEventListener("DOMContentLoaded", function () {
     // Handle Account Status
@@ -70,82 +69,67 @@ document.addEventListener("DOMContentLoaded", function () {
     const drawGraph = function () {
 
         //Get data from DB and then draw graph
+        // Reference to the HeartData subcollection
+        const db = firebase.firestore();
+        const patientID = window.location.search.substring(1, 6);  // Replace with the actual patient ID
+        const heartDataCollection = db.collection("Patients").doc(patientID).collection("HeartData");
 
-        var firestoreTimestamps = [
-            new Date("2023-11-20T12:00:00"),
-            new Date("2023-11-20T12:35:00"),
-            new Date("2023-11-20T12:40:00"),
-            new Date("2023-11-21T08:30:00"),
-            new Date("2023-11-22T18:45:00"),
-            // Add more timestamps as needed
-        ];
+        // Arrays to store HeartRate and TimeStamp
+        const heartRateArray = [];
+        const timeStampArray = [];
 
-        // Your dataset
-        var data = {
-            labels: firestoreTimestamps,
-            datasets: [
-                {
-                    label: 'Heart Rate',
-                    data: [80, 76, 90, 150], // Replace with your actual data
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                    fill: false
-                }
-            ]
-        };
+        // Retrieve all documents in the HeartData subcollection
+        heartDataCollection.get().then((querySnapshot) => {
+            const dataArr = [];
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const timeStamp = new Date(data.TimeStamp.seconds * 1000);
+                const formattedTime = timeStamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // Filter data for specific dates
-        var specificDates = ["2023-11-20"]; // Add the specific dates you want to display
-        var filteredLabels = [];
-        var filteredData = [];
+                dataArr.push({ time: timeStamp, formattedTime: formattedTime, heartRate: data.HeartRate });
+            });
 
-        data.labels.forEach((timestamp, index) => {
-            var timeString = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            if (specificDates.includes(timestamp.toISOString().split('T')[0])) {
-                filteredLabels.push(timeString);
-                filteredData.push(data.datasets[0].data[index]);
-            }
-        });
+            // Sort the dataArr based on the time
+            dataArr.sort((a, b) => a.time - b.time);
 
-        // Update data with filtered data
-        data.labels = filteredLabels;
-        data.datasets[0].data = filteredData;
+            // Populate the arrays after sorting
+            dataArr.forEach((item) => {
+                timeStampArray.push(item.formattedTime);
+                heartRateArray.push(item.heartRate);
+            });
 
+            // Example: Print the arrays
+            console.log("Heart Rates:", heartRateArray);
+            console.log("Time Stamps:", timeStampArray);
 
-        var options = {
-            scales: {
-                x: {
-                    type: 'category',
-                    title: {
-                        display: true,
-                        text: 'Time'
-                    }
+            // Use Chart.js to create a chart
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timeStampArray,
+                    datasets: [{
+                        label: 'Heart Rate',
+                        data: heartRateArray,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
                 },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Value'
-                    }
-                }
-            },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function (context) {
-                            var label = context.dataset.label || '';
-                            var value = context.parsed.y || 0;
-                            return `${label}: ${value} at ${context.label}`;
+                options: {
+                    scales: {
+                        x: {
+                            type: 'category', // Use category scale for custom labels
+                            labels: timeStampArray,
+                        },
+                        y: {
+                            beginAtZero: true
                         }
                     }
                 }
-            }
-        };
-
-        const myChart = new Chart("myChart", {
-            type: "line",
-            data: data,
-            options: options
+            });
+        }).catch((error) => {
+            console.error("Error getting documents: ", error);
         });
-
     };
 });
