@@ -59,3 +59,9 @@ label, h3 {
 #logout:hover {
   background-color: rgb(200, 200, 200);
 }
+
+.dateTxt {
+	text-align: left;
+	display: block;
+	margin-bottom: 5px;
+}

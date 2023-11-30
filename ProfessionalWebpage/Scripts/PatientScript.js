@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.body.style.display = 'block';
             buttons();
             patientFunction();
+            setDefaultDate();
             drawGraph();
         } else {
             window.location.assign("index.html");
@@ -63,73 +64,107 @@ document.addEventListener("DOMContentLoaded", function () {
         
     };
 
+    function setDefaultDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        let month = today.getMonth() + 1;
+        let day = today.getDate();
+
+        // Add leading zeros if needed
+        month = month < 10 ? '0' + month : month;
+        day = day < 10 ? '0' + day : day;
+
+        const formattedDate = `${year}-${month}-${day}`;
+        document.getElementById('vitalDate').value = formattedDate;
+    }
+
+    
+    let myChart; // Declare a global variable to store the Chart instance
+
     /*
         Draw Graph
     */
     const drawGraph = function () {
+        // Get selected date from the input element
+        const selectedDate = document.getElementById('vitalDate').value;
 
-        //Get data from DB and then draw graph
-        // Reference to the HeartData subcollection
+        // Destroy existing chart instance if it exists
+        if (myChart) {
+            myChart.destroy();
+        }
+
+        // Get data from DB and then draw graph
         const db = firebase.firestore();
-        const patientID = window.location.search.substring(1, 6);  // Replace with the actual patient ID
+        const patientID = window.location.search.substring(1, 6);
         const heartDataCollection = db.collection("Patients").doc(patientID).collection("HeartData");
 
-        // Arrays to store HeartRate and TimeStamp
         const heartRateArray = [];
         const timeStampArray = [];
 
-        // Retrieve all documents in the HeartData subcollection
-        heartDataCollection.get().then((querySnapshot) => {
-            const dataArr = [];
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const timeStamp = new Date(data.TimeStamp.seconds * 1000);
-                const formattedTime = timeStamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const startOfDay = new Date(selectedDate + 'T00:00:00');
+        const endOfDay = new Date(selectedDate + 'T23:59:59');
 
-                dataArr.push({ time: timeStamp, formattedTime: formattedTime, heartRate: data.HeartRate });
-            });
+        // Retrieve documents for the specific date
+        heartDataCollection.where('TimeStamp', '>=', startOfDay)
+            .where('TimeStamp', '<=', endOfDay)
+            .get()
+            .then((querySnapshot) => {
+                const dataArr = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const timeStamp = new Date(data.TimeStamp.seconds * 1000);
+                    const formattedTime = timeStamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            // Sort the dataArr based on the time
-            dataArr.sort((a, b) => a.time - b.time);
+                    dataArr.push({ time: timeStamp, formattedTime: formattedTime, heartRate: data.HeartRate });
+                });
 
-            // Populate the arrays after sorting
-            dataArr.forEach((item) => {
-                timeStampArray.push(item.formattedTime);
-                heartRateArray.push(item.heartRate);
-            });
+                dataArr.sort((a, b) => a.time - b.time);
 
-            // Example: Print the arrays
-            console.log("Heart Rates:", heartRateArray);
-            console.log("Time Stamps:", timeStampArray);
+                dataArr.forEach((item) => {
+                    timeStampArray.push(item.formattedTime);
+                    heartRateArray.push(item.heartRate);
+                });
 
-            // Use Chart.js to create a chart
-            const ctx = document.getElementById('myChart').getContext('2d');
-            const myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: timeStampArray,
-                    datasets: [{
-                        label: 'Heart Rate',
-                        data: heartRateArray,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false
-                    }]
-                },
-                options: {
-                    scales: {
-                        x: {
-                            type: 'category', // Use category scale for custom labels
-                            labels: timeStampArray,
-                        },
-                        y: {
-                            beginAtZero: true
+                const ctx = document.getElementById('myChart').getContext('2d');
+                myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: timeStampArray,
+                        datasets: [{
+                            label: 'Heart Rate',
+                            data: heartRateArray,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: timeStampArray,
+                                position: 'bottom',
+                                grid: {
+                                    drawTicks: false,
+                                }
+                            },
+                            y: {
+                                suggestedMin: 0, // Enforce a minimum value for the y-axis
+                                stepSize: 1, // Display whole numbers
+                            }
                         }
                     }
-                }
+                });
+            }).catch((error) => {
+                console.error("Error getting documents: ", error);
             });
-        }).catch((error) => {
-            console.error("Error getting documents: ", error);
-        });
     };
+
+    document.getElementById('vitalDate').addEventListener('change', function () {
+        const selectedDate = this.value;
+        drawGraph(selectedDate);
+    });
+
+    /*// Initial call to draw the graph with the default date
+    drawGraph();*/
 });
