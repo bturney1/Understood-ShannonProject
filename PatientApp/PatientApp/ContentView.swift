@@ -11,30 +11,52 @@ import Firebase
 struct ContentView: View {
     
     let db = Firestore.firestore()
-    let patientID = "00002"  // Replace with the actual patient ID
     let healthStore = HKHealthStore()
     
+    @Binding var patientID: String // Replace with the actual patient ID
     @State private var timer: Timer?
     @State private var heartRate: Double?
     @State private var fallEvents: [String] = [] // Array to store fall events
+    @State private var isLoggedIn = true
     
-    var body: some View
-    {
-        VStack
-        {
-            Image(systemName: "heart")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Click button to send heart rate")
-            Text("Heart Rate: \(heartRate.map { String(format: "%.0f", $0) } ?? "N/A") BPM")
-            Button("Send heart rate") {
-                self.sendData()
+    var body: some View {
+        if isLoggedIn {
+            ZStack {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button(action: {logOut()}) {
+                            Text("Log out")
+                                .padding()
+                                .foregroundColor(.black)
+                                .background(Color.white)
+                                .cornerRadius(8)
+                        }
+                        .padding()
+                    }
+                    Spacer()
+                    Image(systemName: "heart")
+                        .imageScale(.large)
+                        .foregroundStyle(.tint)
+                    Text("Click button to send heart rate")
+                    Text("Heart Rate: \(heartRate.map { String(format: "%.0f", $0) } ?? "N/A") BPM")
+                    Button(action: {sendData()}) {
+                        Text("Send data")
+                            .padding()
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .cornerRadius(8)
+                    }
+                    Spacer()
+                }
             }
+            .onAppear(perform: {
+                self.requestHKAuth()
+                self.startTimer()
+            })
+        } else {
+            LoginView()
         }
-        .onAppear(perform: {
-            self.requestHKAuth()
-            self.startTimer()
-        })
     }
     
     func startTimer() {
@@ -124,6 +146,15 @@ struct ContentView: View {
             }
             
             healthStore.execute(query)
+        }
+    }
+    
+    func logOut() {
+        do {
+            try Auth.auth().signOut()
+            isLoggedIn = false
+        } catch {
+            print("Error signing out: (error.localizedDescription)")
         }
     }
 }
