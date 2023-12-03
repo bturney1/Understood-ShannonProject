@@ -1,14 +1,4 @@
 // Initialize Firebase
-var firebaseConfig = {
-    apiKey: "AIzaSyAOFuW59Zaj7W9Zbvc2JHREFYaMNolSnww",
-    authDomain: "teamunderstoodshannon.firebaseapp.com",
-    projectId: "teamunderstoodshannon",
-    storageBucket: "teamunderstoodshannon.appspot.com",
-    messagingSenderId: "302604389305",
-    appId: "1:302604389305:web:fd017389332c2906b3c468",
-    measurementId: "G-RXCDK0QCK9"
-};
-
 firebase.initializeApp(firebaseConfig);
 
 // Dashboard page
@@ -69,21 +59,74 @@ document.addEventListener("DOMContentLoaded", function () {
         /*
             Generate divs with the alerts/notifications
         */
-        const updateAlerts = function() {
-            // Sample code
-            const alertsElement = document.querySelector("#alertsDiv");
-            for(let i = 0; i < 10; i++) {
-            const childDiv = document.createElement("div");
-            childDiv.textContent = i;
-            if(i % 2 == 0) {
-                childDiv.setAttribute("id", "alert");
-            } else {
-                childDiv.setAttribute("id", "notification");
-            }
-            alertsElement.appendChild(childDiv); // Append the child div to the parent div
+        const updateAlerts = function () {
+            const db = firebase.firestore();
+            const alertsDiv = document.getElementById('alertsDiv');
+            let i = 0;
+
+            // Function to get notifications from Firestore
+            db.collection('Notifications').get()
+                .then(querySnapshot => {
+                    querySnapshot.forEach(doc => {
+                        // Create a div for each notification
+                        const notificationDiv = document.createElement('div');
+                        notificationDiv.classList.add('clickableDiv');
+                        const pID = doc.data().p_ID;
+                        const docID = doc.id;
+
+                        // Display the message inside the child div
+                        const message = doc.data().message;
+                        notificationDiv.innerHTML = `<p>${message}</p>`;
+
+                        if (i % 2 == 0) {
+                            notificationDiv.setAttribute("id", "alert");
+                        } else {
+                            notificationDiv.setAttribute("id", "notification");
+                        }
+
+                        // Determine the name of the patient to redirect to the correct HTML
+                        let patientName;
+
+                        db.collection('Patients')
+                            .where('p_ID', '==', pID)
+                            .get()
+                            .then(querySnapshot => {
+                                querySnapshot.forEach(doc => {
+                                    // Display the details of the patient
+                                    patientName = doc.data().firstName;
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error finding patient: ', error);
+                            });
+
+                        notificationDiv.addEventListener('click', () => {
+                            // Delete the document from Firestore
+                            deleteNotification(docID)
+                                .then(() => {
+                                    // Redirect to a different HTML page after deletion
+                                    window.location.href = "WebsitePatient.html?" + pID + "." + patientName;
+                                })
+                                .catch(error => {
+                                    console.error('Error deleting document: ', error);
+                                });
+                        });
+
+                        // Append the child div to the alertsDiv container
+                        alertsDiv.appendChild(notificationDiv);
+                        i++;
+                    });
+                })
+                .catch(error => {
+                    console.error('Error getting notifications: ', error);
+                });
+
+            // Function to delete a notification from Firestore
+            function deleteNotification(docId) {
+                return db.collection('Notifications').doc(docId).delete();
             }
         };
-        
+
         // Default call to update alerts
         updateAlerts();
     };

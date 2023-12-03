@@ -69,6 +69,19 @@ label, h3 {
 	align-items: center;
 }
 
+.clickableDiv {
+	padding: 10px;
+	border: 1px solid #ccc;
+	background-color: #f5f5f5;
+	cursor: pointer;
+	transition: background-color 0.3s ease; /* Add a smooth transition effect */
+}
+
+	.clickableDiv:hover {
+		background-color: #e0e0e0;
+		color: #FFFFFF; /* Change to the desired text color */
+	}
+
 #patientSearch {
 	color: rgb(255, 255, 255);
 	background-color: rgb(0, 104, 93);
