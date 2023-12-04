@@ -9,7 +9,6 @@ import SwiftUI
 import Firebase
 
 struct LoginView: View {
-    @State private var patientID = ""
     @State private var alertText = ""
     @State private var userAccess = false
     @FocusState private var userFieldIsFocused: Bool
@@ -20,7 +19,7 @@ struct LoginView: View {
     var body: some View {
         ZStack {
             if Auth.auth().currentUser != nil || userAccess {
-                ContentView(patientID: $patientID)
+                ContentView()
             } else {
                 VStack {
                     VStack {
@@ -91,13 +90,13 @@ struct LoginView: View {
                                 // Handle login error
                                 alertText = "Username/password is incorrect."
                                 userAccess = false
-                                patientID = ""
+                                UserDefaults.standard.set("", forKey:"patientID")
                             } else {
                                 // User signed in successfully
                                 print("User signed in successfully")
                                 // You can navigate to the next screen or perform any other necessary actions
                                 userAccess = true
-                                patientID = document.documentID
+                                UserDefaults.standard.set(document.documentID, forKey:"patientID")
                             }
                         }
                     } else {
