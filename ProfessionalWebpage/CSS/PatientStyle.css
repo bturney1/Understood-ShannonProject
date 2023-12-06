@@ -65,3 +65,10 @@ label, h3 {
 	display: block;
 	margin-bottom: 5px;
 }
+
+#prompt {
+	text-align: right;
+	display: block;
+	margin-bottom: 5px;
+	color: red;
+}

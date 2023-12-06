@@ -46,6 +46,62 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             window.location.assign("index.html");
         });
+
+        /*
+            Alert submit
+        */
+        const patientID = window.location.search.substring(1, 6);
+        const db = firebase.firestore();
+
+        // Update values in Firestore
+        /*db.collection("Patients").doc(patientID).update({
+            HRlow: newLow,
+            HRhigh: newHigh,
+        })
+            .then(() => {
+                console.log("Document successfully updated!");
+            })
+            .catch((error) => {
+                console.error("Error updating document: ", error);
+            });*/
+        document.querySelector("#prompt").innerHTML = "";
+
+        document.querySelector("#submit").addEventListener("click", function () {
+            var selectedValue = document.getElementById('alertListNames').value;
+            const newLow = parseInt(document.getElementById('alertLow').value, 10);
+            const newHigh = parseInt(document.getElementById('alertHigh').value, 10);
+            if (document.getElementById('alertLow').value === "" || document.getElementById('alertHigh').value === "") {
+                document.querySelector("#prompt").innerHTML = "Please set both fields";
+                console.log("empty fields");
+            } else {
+                document.querySelector("#prompt").innerHTML = "";
+                if (newHigh <= newLow) {
+                    //error message
+                    document.querySelector("#prompt").innerHTML = "Low must be less than high";
+                } else {
+                    document.querySelector("#prompt").innerHTML = "";
+                    if (selectedValue === "heartRate") {
+
+                        db.collection("Patients").doc(patientID).update({
+                            HRlow: newLow,
+                            HRhigh: newHigh,
+                        })
+                            .then(() => {
+                                console.log("Document successfully updated!");
+                            })
+                            .catch((error) => {
+                                console.error("Error updating document: ", error);
+                            });
+
+                        console.log(selectedValue);
+                    }
+
+                    if (selectedValue === "oxygenLevel") {
+                        console.log(selectedValue);
+                    }
+                }
+            }
+        });
     };
     
     const patientFunction = function() {
