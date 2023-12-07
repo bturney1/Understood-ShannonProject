@@ -80,7 +80,7 @@ struct ContentView: View {
                     self.getHeartRate()
                 } else {
                     // Handle error or user denying access
-                    print("Error geting health data authorization: \(String(describing: error?.localizedDescription))")
+                    print("Error getting health data authorization: \(String(describing: error?.localizedDescription))")
                 }
             }
         }
@@ -144,7 +144,7 @@ struct ContentView: View {
                         let heartRate = latestHeartRateSample.quantity.doubleValue(for: HKUnit.count().unitDivided(by:HKUnit.minute()))
                         self.heartRate = heartRate
                     } else {
-                        print("No hear rate found.")
+                        print("No heart rate data found.")
                     }
                 }
             }
@@ -167,7 +167,7 @@ struct ContentView: View {
                     let oxygenLevel = sample.quantity.doubleValue(for: HKUnit.percent())
                     self.oxygenLevel = oxygenLevel
                 } else {
-                    print("No oxygen level found.")
+                    print("No oxygen level data found.")
                 }
             }
         }
@@ -183,10 +183,10 @@ struct ContentView: View {
                                       limit: HKObjectQueryNoLimit,
                                       sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)]) { (query, results, error) in
                 if let sample = results?.first as? HKElectrocardiogram {
-                    // Access ecg data
+                    // Access ECG data
                 } else {
                     // Handle error
-                    print("Error: \(error?.localizedDescription ?? "Unkown error")")
+                    print("Error: \(error?.localizedDescription ?? "Unknown error")")
                 }
             }
         }
@@ -221,7 +221,7 @@ struct ContentView: View {
             isLoggedIn = false
         } catch {
             // Error
-            print("Error signing out: (error.localizedDescription)")
+            print("Error signing out: \(error?.localizedDescription)")
         }
     }
 }

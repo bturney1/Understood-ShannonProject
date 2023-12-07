@@ -86,7 +86,7 @@ struct LoginView: View {
                         // Email exists in the "Patients" collection
                         Auth.auth().signIn(withEmail: username, password: password) { (authResult, error) in
                             if let error = error {
-                                print("Error signing in: (error.localizedDescription)")
+                                print("Error signing in: \(error?.localizedDescription)")
                                 // Handle login error
                                 alertText = "Username/password is incorrect."
                                 userAccess = false
