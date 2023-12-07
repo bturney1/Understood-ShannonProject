@@ -138,7 +138,7 @@ struct ContentView: View {
             let query = HKSampleQuery(sampleType: heartRateType,
                                       predicate: nil,
                                       limit: HKObjectQueryNoLimit,
-                                      sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)]){ (query, results, error) in
+                                      sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]){ (query, results, error) in
                 if let samples = results as? [HKQuantitySample] {
                     if let latestHeartRateSample = samples.last {
                         let heartRate = latestHeartRateSample.quantity.doubleValue(for: HKUnit.count().unitDivided(by:HKUnit.minute()))
