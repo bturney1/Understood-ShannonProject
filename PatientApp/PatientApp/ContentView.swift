@@ -78,16 +78,15 @@ struct ContentView: View {
                     print("HealthKit authorization successful")
                     // If authorization is successful, get the heart rate immediately
                     self.getHeartRate()
+                    self.getOxygenSaturation()
+                    self.getFallEvents()
+                    self.getECG()
                 } else {
                     // Handle error or user denying access
                     print("Error getting health data authorization: \(String(describing: error?.localizedDescription))")
                 }
             }
         }
-        getHeartRate()
-        getOxygenSaturation()
-        getFallEvents()
-        getECG()
     }
     
     // Want to update the values every 30 seconds
@@ -102,17 +101,20 @@ struct ContentView: View {
     
     // Send data into the database
     func sendData() {
+        // Reference to the Patients collection
+        let patientsCollection = db.collection("Patients")
+        
+        // Reference to the specific patient document
+        let patientDocument = patientsCollection.document(patientID)
+        
+        // Refrence to the Notification collection
+        let notificationsCollection = db.collection("Notifications")
+        
         if(heartRate != nil) {
             let heartRateData : [String: Any] = [
                 "HeartRate": heartRate,
                 "TimeStamp": FieldValue.serverTimestamp()
             ]
-            
-            // Reference to the Patients collection
-            let patientsCollection = db.collection("Patients")
-            
-            // Reference to the specific patient document
-            let patientDocument = patientsCollection.document(patientID)
             
             // Reference to the HeartData subcollection
             let heartDataCollection = patientDocument.collection("HeartData")
@@ -125,8 +127,71 @@ struct ContentView: View {
                     print("Document added to subcollection successfully!")
                 }
             }
+            
+            patientDocument.getDocument { (document, error) in
+                if let error = error {
+                    print("Error getting document: \(error)")
+                } else {
+                    if let document = document, document.exists {
+                        // Document data is available
+                        if let data = document.data() {
+                            // Now you can access the data dictionary
+                            if let hrHigh = data["HRhigh"] as? Double,
+                               let hrLow = data["HRlow"] as? Double {
+                                // Use hrHigh and hrLow safely
+                                if(hrHigh > 0 && hrLow > 0) {
+                                    if let uwHeartRate = heartRate {
+                                        if(uwHeartRate < hrLow || hrHigh < uwHeartRate) {
+                                            let notificationData: [String: Any] = [
+                                                "message": "Heart rate of \(uwHeartRate) deviates from the set range.",
+                                                "p_ID": patientID
+                                            ]
+                                            
+                                            notificationsCollection.addDocument(data: notificationData) { error in
+                                                if let error = error {
+                                                    print("Error sending notification: (error.localizedDescription)")
+                                                } else {
+                                                    print("Notification sent successfully")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                print("Error: HRhigh or HRlow not present or not a Double")
+                            }
+                        } else {
+                            print("Error: Document does not contain data")
+                        }
+                    } else {
+                        print("Document does not exist")
+                    }
+                }
+            }
+            
         } else {
             print("No heart rate data to send.")
+        }
+        
+        if(oxygenLevel != nil) {
+            let oxygenLevelData : [String: Any] = [
+                "HeartRate": oxygenLevel,
+                "TimeStamp": FieldValue.serverTimestamp()
+            ]
+            
+            // Refrence to the OxygenLevel subcollection
+            let oxygenLevelCollection = patientDocument.collection("OxygenData")
+            
+            // Add a new document to the OxygenData subcollection
+            oxygenLevelCollection.addDocument(data: oxygenLevelData) { error in
+                if let error = error {
+                    print("Error adding document to subcollection: (error)")
+                } else {
+                    print("Document added to subcollection successfully!")
+                }
+            }
+        } else {
+            print("No oxygen level data to send.")
         }
     }
     
@@ -221,7 +286,7 @@ struct ContentView: View {
             isLoggedIn = false
         } catch {
             // Error
-            print("Error signing out: \(error?.localizedDescription)")
+            print("Error signing out: \(error.localizedDescription)")
         }
     }
 }
