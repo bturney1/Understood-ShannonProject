@@ -70,13 +70,19 @@ document.addEventListener("DOMContentLoaded", function () {
             var selectedValue = document.getElementById('alertListNames').value;
             const newLow = parseInt(document.getElementById('alertLow').value, 10);
             const newHigh = parseInt(document.getElementById('alertHigh').value, 10);
+
             if (document.getElementById('alertLow').value === "" || document.getElementById('alertHigh').value === "") {
+                document.querySelector("#prompt").style.color = 'red';
                 document.querySelector("#prompt").innerHTML = "Please set both fields";
-                console.log("empty fields");
+            } else if (newLow <= 0 || newHigh <= 0) {
+                //error message
+                document.querySelector("#prompt").style.color = 'red';
+                document.querySelector("#prompt").innerHTML = "Please enter positive numbers greater than 0";
             } else {
                 document.querySelector("#prompt").innerHTML = "";
                 if (newHigh <= newLow) {
                     //error message
+                    document.querySelector("#prompt").style.color = 'red';
                     document.querySelector("#prompt").innerHTML = "Low must be less than high";
                 } else {
                     document.querySelector("#prompt").innerHTML = "";
@@ -93,6 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                 console.error("Error updating document: ", error);
                             });
 
+                        document.querySelector("#prompt").style.color = 'green';
+                        document.querySelector("#prompt").innerHTML = "Limits Updated";
                         console.log(selectedValue);
                     }
 
@@ -144,32 +152,58 @@ document.addEventListener("DOMContentLoaded", function () {
         const db = firebase.firestore();
         const patientID = window.location.search.substring(1, 6);
         const heartDataCollection = db.collection("Patients").doc(patientID).collection("HeartData");
+        const oxygenDataCollection = db.collection("Patients").doc(patientID).collection("OxygenData");
 
         const heartRateArray = [];
+        const bloodOxygenArray = [];
         const timeStampArray = [];
 
         const startOfDay = new Date(selectedDate + 'T00:00:00');
         const endOfDay = new Date(selectedDate + 'T23:59:59');
 
-        // Retrieve documents for the specific date
+        // Retrieve heart rate documents for the specific date
         heartDataCollection.where('TimeStamp', '>=', startOfDay)
             .where('TimeStamp', '<=', endOfDay)
             .get()
-            .then((querySnapshot) => {
-                const dataArr = [];
-                querySnapshot.forEach((doc) => {
+            .then((heartQuerySnapshot) => {
+                const heartDataArr = [];
+                heartQuerySnapshot.forEach((doc) => {
                     const data = doc.data();
                     const timeStamp = new Date(data.TimeStamp.seconds * 1000);
                     const formattedTime = timeStamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-                    dataArr.push({ time: timeStamp, formattedTime: formattedTime, heartRate: data.HeartRate });
+                    heartDataArr.push({ time: timeStamp, formattedTime: formattedTime, heartRate: data.HeartRate });
                 });
 
-                dataArr.sort((a, b) => a.time - b.time);
+                heartDataArr.sort((a, b) => a.time - b.time);
 
-                dataArr.forEach((item) => {
+                heartDataArr.forEach((item) => {
                     timeStampArray.push(item.formattedTime);
                     heartRateArray.push(item.heartRate);
+                });
+
+                // Retrieve blood oxygen documents for the specific date
+                return oxygenDataCollection.where('TimeStamp', '>=', startOfDay)
+                    .where('TimeStamp', '<=', endOfDay)
+                    .get();
+            })
+            .then((oxygenQuerySnapshot) => {
+                const oxygenDataArr = [];
+                oxygenQuerySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const timeStamp = new Date(data.TimeStamp.seconds * 1000);
+                    const formattedTime = timeStamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    oxygenDataArr.push({ time: timeStamp, formattedTime: formattedTime, bloodOxygen: data.BloodOxygen });
+                });
+
+                oxygenDataArr.sort((a, b) => a.time - b.time);
+
+                oxygenDataArr.forEach((item, index) => {
+                    // Ensure both arrays have data for the same timestamps
+                    if (index < heartRateArray.length) {
+                        bloodOxygenArray.push(item.bloodOxygen);
+                    }
                 });
 
                 const ctx = document.getElementById('myChart').getContext('2d');
@@ -177,13 +211,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     type: 'line',
                     data: {
                         labels: timeStampArray,
-                        datasets: [{
-                            label: 'Heart Rate',
-                            data: heartRateArray,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1,
-                            fill: false
-                        }]
+                        datasets: [
+                            {
+                                label: 'Heart Rate',
+                                data: heartRateArray,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                fill: false
+                            },
+                            {
+                                label: 'Blood Oxygen',
+                                data: bloodOxygenArray,
+                                borderColor: 'rgba(255, 0, 0, 1)', // You can choose a different color
+                                borderWidth: 1,
+                                fill: false
+                            }
+                        ]
                     },
                     options: {
                         scales: {
@@ -202,10 +245,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     }
                 });
-            }).catch((error) => {
+            })
+            .catch((error) => {
                 console.error("Error getting documents: ", error);
             });
     };
+
 
     document.getElementById('vitalDate').addEventListener('change', function () {
         const selectedDate = this.value;
