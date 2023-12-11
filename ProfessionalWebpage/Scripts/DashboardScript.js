@@ -11,9 +11,9 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-//Dashboard page
+// Dashboard page
 document.addEventListener("DOMContentLoaded", function () {
-    //Handle Account Status
+    // Handle Account Status
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
             document.body.style.display = 'block';
@@ -23,71 +23,68 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.assign("index.html");
         }
     });
-   /*
-      Need to add functionality to the patient search button
-      that loads the patient search page. Then need to add
-      functionality to the log out button, to log the user
-      out and return them to the log in screen. Then make 
-      alerts show up and calculate what an alert or
-      notificaiton entails.
-   */
-   
-   /*
-      Functionality for search and logout buttons
-   */
-   const buttons = function() {
-      /*
-         Search button
-      */
-      document.querySelector("#patientSearch").addEventListener("click", function() {
-         window.location.assign("WebsiteSearch.html");
-      });
-      
-      /*
-         Logout button
-      */
-       document.querySelector("#logout").addEventListener("click", function () {
-           firebase.auth().signOut().then(function () {
-               // Sign-out successful.
-               console.log('User has been logged out.');
-           }).catch(function (error) {
-               // An error happened.
-               console.error('Error occurred during logout: ' + error.message);
-           });
-           window.location.assign("index.html");
-      });
+    /*
+        Then make alerts show up and calculate what an alert or
+        notificaiton entails.
+    */
+    
+    /*
+        Functionality for search and logout buttons
+    */
+    const buttons = function() {
+        /*
+            Search button
+        */
+        document.querySelector("#patientSearch").addEventListener("click", function() {
+            window.location.assign("WebsiteSearch.html");
+        });
+        
+        /*
+            Logout button
+        */
+        document.querySelector("#logout").addEventListener("click", function () {
+            firebase.auth().signOut().then(function () {
+                // Sign-out successful.
+                console.log('User has been logged out.');
+            }).catch(function (error) {
+                // An error happened.
+                console.error('Error occurred during logout: ' + error.message);
+            });
+            window.location.assign("index.html");
+        });
     };
-   
-   /*
-      Functionality for the alerts/notifications
-   */
-   const dashboardFunction = function() {
-      /*
-         Get database information
-      */
-      
-      /*
-         Generate alerts/notifications
-      */
-      
-      /*
-         Generate divs with the alerts/notifications
-      */
-      const updateAlerts = function() {
-         //Sample code
-         const alertsElement = document.querySelector("#alertsDiv");
-         for(let i = 0; i < 10; i++) {
+    
+    /*
+        Functionality for the alerts/notifications
+    */
+    const dashboardFunction = function() {
+        /*
+            Get database information
+        */
+        
+        /*
+            Generate alerts/notifications
+        */
+        
+        /*
+            Generate divs with the alerts/notifications
+        */
+        const updateAlerts = function() {
+            // Sample code
+            const alertsElement = document.querySelector("#alertsDiv");
+            for(let i = 0; i < 10; i++) {
             const childDiv = document.createElement("div");
             childDiv.textContent = i;
             if(i % 2 == 0) {
-               childDiv.setAttribute("id", "alert");
+                childDiv.setAttribute("id", "alert");
             } else {
-               childDiv.setAttribute("id", "notification");
+                childDiv.setAttribute("id", "notification");
             }
             alertsElement.appendChild(childDiv); // Append the child div to the parent div
-         }
-      };
-      
-      updateAlerts();
+            }
+        };
+        
+        // Default call to update alerts
+        updateAlerts();
     };
 });
