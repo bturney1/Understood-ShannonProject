@@ -37,18 +37,15 @@
 		</div>
 		<div class="topRow">
 			<label for="alertList">Custom alert for: </label>
-			<select name="alertList" id="alertListNames">
+			<select name="alertList" id="alertListOptions">
 				<option value="heartRate">Heart rate</option>
 				<option value="oxygenLevel">Oxygen level</option>
 			</select>
-			<label for="alertLow">low: </label>
-			<input id="alertLow" name="alertLow"></input>
-			<label for="alertHigh">high: </label>
-			<input id="alertHigh" name="alertHigh"></input>
+			<div id="alertInputs">
+			</div>
 			<button id="submit" type="button">Submit</button>
 		</div>
 		<div id="prompt"></div>
-
 	</fieldset>
 
 	<fieldset id="vitalGraphs">
