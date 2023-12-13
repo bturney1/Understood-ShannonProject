@@ -15,11 +15,12 @@ struct ContentView: View {
     
     @State private var patientID = "" // Replace with the actual patient ID
     @State private var timer: Timer?
-    @State private var heartRate: Double?
-    @State private var oxygenLevel: Double?
+    @State private var heartRate: Int?
+    @State private var bloodOxygen: Int?
     @State private var ecgData: Data?
     @State private var fallEvents: [String] = [] // Array to store fall events
     @State private var isLoggedIn = true
+    @State private var userInput = ""
     
     var body: some View {
         if isLoggedIn {
@@ -41,8 +42,8 @@ struct ContentView: View {
                         .imageScale(.large)
                         .foregroundStyle(.tint)
                     Text("Click button to send heart rate")
-                    Text("Heart Rate: \(heartRate.map { String(format: "%.0f", $0) } ?? "N/A") BPM")
-                    Text("Oxygen Level: \(oxygenLevel.map { String(format: "%.0f", $0) } ?? "N/A") Rate(?)")
+                    Text("Heart Rate: " + String(heartRate ?? -1) + " BPM")
+                    Text("Oxygen Level: " + String(bloodOxygen ?? -1) + "%")
                     Button(action: {sendData()}) {
                         Text("Send data")
                             .padding()
@@ -136,15 +137,16 @@ struct ContentView: View {
                         // Document data is available
                         if let data = document.data() {
                             // Now you can access the data dictionary
-                            if let hrHigh = data["HRhigh"] as? Double,
-                               let hrLow = data["HRlow"] as? Double {
+                            if let hrHigh = data["HRhigh"] as? Int,
+                               let hrLow = data["HRlow"] as? Int {
                                 // Use hrHigh and hrLow safely
                                 if(hrHigh > 0 && hrLow > 0) {
                                     if let uwHeartRate = heartRate {
                                         if(uwHeartRate < hrLow || hrHigh < uwHeartRate) {
                                             let notificationData: [String: Any] = [
-                                                "message": "Heart rate of \(uwHeartRate) deviates from the set range.",
-                                                "p_ID": patientID
+                                                "Message": "\(getPatientName(document: data))'s heart rate of \(uwHeartRate) deviates from the set range.",
+                                                "p_ID": patientID,
+                                                "TimeStamp": FieldValue.serverTimestamp()
                                             ]
                                             
                                             notificationsCollection.addDocument(data: notificationData) { error in
@@ -164,35 +166,88 @@ struct ContentView: View {
                             print("Error: Document does not contain data")
                         }
                     } else {
-                        print("Document does not exist")
+                        print("Error: Patient document does not exist")
                     }
                 }
             }
-            
         } else {
             print("No heart rate data to send.")
         }
         
-        if(oxygenLevel != nil) {
-            let oxygenLevelData : [String: Any] = [
-                "HeartRate": oxygenLevel,
+        if(bloodOxygen != nil) {
+            let bloodOxygenData : [String: Any] = [
+                "BloodOxygen": bloodOxygen,
                 "TimeStamp": FieldValue.serverTimestamp()
             ]
             
-            // Refrence to the OxygenLevel subcollection
-            let oxygenLevelCollection = patientDocument.collection("OxygenData")
+            // Refrence to the bloodOxygen subcollection
+            let bloodOxygenCollection = patientDocument.collection("OxygenData")
             
             // Add a new document to the OxygenData subcollection
-            oxygenLevelCollection.addDocument(data: oxygenLevelData) { error in
+            bloodOxygenCollection.addDocument(data: bloodOxygenData) { error in
                 if let error = error {
                     print("Error adding document to subcollection: (error)")
                 } else {
                     print("Document added to subcollection successfully!")
                 }
             }
+            
+            patientDocument.getDocument { (document, error) in
+                if let error = error {
+                    print("Error getting document: \(error)")
+                } else {
+                    if let document = document, document.exists {
+                        // Document data is available
+                        if let data = document.data() {
+                            // Now you can access the data dictionary
+                            if let boLow = data["BOlow"] as? Int{
+                                // Use hrHigh and hrLow safely
+                                if(boLow > 0 && boLow < 101) {
+                                    if let uwBloodOxygen = bloodOxygen {
+                                        if(uwBloodOxygen < boLow) {
+                                            let notificationData: [String: Any] = [
+                                                "Message": "\(getPatientName(document: data))'s blood oxygen level of \(uwBloodOxygen)% deviates from the set range.",
+                                                "p_ID": patientID,
+                                                "TimeStamp": FieldValue.serverTimestamp()
+                                            ]
+                                            
+                                            notificationsCollection.addDocument(data: notificationData) { error in
+                                                if let error = error {
+                                                    print("Error sending notification: (error.localizedDescription)")
+                                                } else {
+                                                    print("Notification sent successfully")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                print("Error: HRhigh or HRlow not present or not a Double")
+                            }
+                        } else {
+                            print("Error: Document does not contain data")
+                        }
+                    } else {
+                        print("Error: Patient document does not exist")
+                    }
+                }
+            }
         } else {
             print("No oxygen level data to send.")
         }
+    }
+    
+    // Grab the patients name for use in notifications and alerts
+    func getPatientName(document: [String: Any]) -> String {
+        var patientName = ""
+        if let firstName = document["firstName"] as? String,
+           let lastName = document["lastName"] as? String {
+            patientName = lastName + ", " + firstName
+        } else {
+            print("No patient name on file.")
+        }
+        print("Patient name is: \(patientName)")
+        return patientName
     }
     
     // Grabbing current heart rate
@@ -207,7 +262,7 @@ struct ContentView: View {
                 if let samples = results as? [HKQuantitySample] {
                     if let latestHeartRateSample = samples.last {
                         let heartRate = latestHeartRateSample.quantity.doubleValue(for: HKUnit.count().unitDivided(by:HKUnit.minute()))
-                        self.heartRate = heartRate
+                        self.heartRate = Int(heartRate)
                     } else {
                         print("No heart rate data found.")
                     }
@@ -229,13 +284,16 @@ struct ContentView: View {
                                       sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)]) { (query, results, error) in
                 if let sample = results?.first as? HKQuantitySample {
                     // Access blood oxygen data
-                    let oxygenLevel = sample.quantity.doubleValue(for: HKUnit.percent())
-                    self.oxygenLevel = oxygenLevel
+                    print(sample.quantity.doubleValue(for: HKUnit.percent()))
+                    let bloodOxygen = sample.quantity.doubleValue(for: HKUnit.percent())
+                    self.bloodOxygen = Int(bloodOxygen * 100)
                 } else {
                     print("No oxygen level data found.")
                 }
             }
+            healthStore.execute(query)
         }
+        self.bloodOxygen = 80
     }
     
     // Grabbing the ECG
@@ -254,6 +312,7 @@ struct ContentView: View {
                     print("Error: \(error?.localizedDescription ?? "Unknown error")")
                 }
             }
+            healthStore.execute(query)
         }
     }
     
@@ -273,6 +332,7 @@ struct ContentView: View {
                     }
                 }
             }
+            healthStore.execute(query)
         }
     }
     
