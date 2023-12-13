@@ -61,11 +61,15 @@ document.addEventListener("DOMContentLoaded", function () {
         */
         const updateAlerts = function () {
             const db = firebase.firestore();
+            // Assuming you have a container div with the id 'alertsDiv'
             const alertsDiv = document.getElementById('alertsDiv');
+
+            // Initialize a counter
             let i = 0;
 
-            // Function to get notifications from Firestore
-            db.collection('Notifications').get()
+            db.collection('Notifications')
+                .orderBy('TimeStamp', 'desc')  // Order by timestamp in descending order (most recent first)
+                .get()
                 .then(querySnapshot => {
                     querySnapshot.forEach(doc => {
                         // Create a div for each notification
@@ -75,10 +79,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         const docID = doc.id;
 
                         // Display the message inside the child div
-                        const message = doc.data().message;
+                        const message = doc.data().Message;
                         notificationDiv.innerHTML = `<p>${message}</p>`;
 
-                        if (i % 2 == 0) {
+                        if (i % 2 === 0) {
                             notificationDiv.setAttribute("id", "alert");
                         } else {
                             notificationDiv.setAttribute("id", "notification");
@@ -121,9 +125,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.error('Error getting notifications: ', error);
                 });
 
-            // Function to delete a notification from Firestore
-            function deleteNotification(docId) {
-                return db.collection('Notifications').doc(docId).delete();
+            // Function to delete a notification by document ID
+            function deleteNotification(docID) {
+                return db.collection('Notifications').doc(docID).delete();
             }
         };
 
